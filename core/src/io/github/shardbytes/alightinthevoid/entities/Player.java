@@ -8,9 +8,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import io.github.shardbytes.alightinthevoid.GameScreen;
+import io.github.shardbytes.alightinthevoid.interfaces.ILockable;
 import io.github.shardbytes.alightinthevoid.interfaces.ITickable;
 
-public class Player implements ITickable{
+public class Player implements ITickable, ILockable{
 	
 	private Sprite playerSprite;
 	private Vector2 position;
@@ -37,6 +38,7 @@ public class Player implements ITickable{
 	
 	}
 	
+	@Override
 	public Vector2 getPosition(){
 		return position;
 	}

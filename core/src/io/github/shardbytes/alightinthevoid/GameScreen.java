@@ -23,7 +23,7 @@ public class GameScreen implements Screen{
 	/*
 	 * Array that holds all game objects, that are tickable
 	 */
-	public static ArrayList<ITickable> tickableGameObjects = new ArrayList<ITickable>();
+	public static ArrayList<ITickable> tickableGameObjects = new ArrayList<>();
 
 	GameScreen(final VoidLight game){
 		this.game = game;
@@ -37,16 +37,16 @@ public class GameScreen implements Screen{
 
 		float w = Gdx.graphics.getWidth();
 		float h = Gdx.graphics.getHeight();
-
+		
+		/*
+		 * Set up camera and move it to [0, 0]
+		 */
 		cam = new OrthographicCamera(30, 30 * (h / w));
 		cam.position.set(cam.viewportWidth / 2.0f, cam.viewportHeight / 2.0f, 0.0f);
 		cam.zoom = 10.0f;
 		cam.update();
 		
 		Player p = new Player(Player.Team.AMBER);
-		
-		//playerSprite = new Sprite(new Texture(Gdx.files.internal("players/amberplayer.png")));
-		//playerSprite.setPosition(cam.viewportWidth / 2.0f, cam.viewportHeight / 2.0f);
 
 	}
 
@@ -92,7 +92,7 @@ public class GameScreen implements Screen{
 	
 	@Override
 	public void show(){
-		music.play();
+		//music.play();
 	}
 	
 	@Override
