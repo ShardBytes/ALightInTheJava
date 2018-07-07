@@ -13,6 +13,7 @@ public class VoidLight extends Game{
 	@Override
 	public void create(){
 		batch = new SpriteBatch();
+		HUDBatch = new SpriteBatch();
 		font = new BitmapFont();
 		
 		this.setScreen(new MainMenu(this));
@@ -26,8 +27,10 @@ public class VoidLight extends Game{
 	
 	@Override
 	public void dispose(){
-		batch.dispose();
-		font.dispose();
 		//super.dispose();
+		batch.dispose();
+		HUDBatch.dispose();
+		font.dispose();
+		
 	}
 }

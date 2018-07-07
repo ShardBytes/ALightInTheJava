@@ -25,8 +25,8 @@ public class Player implements ITickable, ILockable{
 	 * Enum defining what team the player is in.
 	 */
 	public enum Team{
-		AQUAMARINE,
-		AMBER
+		AMBER,
+		AQUAMARINE
 	}
 	
 	/**
