@@ -7,10 +7,12 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import io.github.shardbytes.alightinthevoid.GameScreen;
 import io.github.shardbytes.alightinthevoid.interfaces.ILockable;
 import io.github.shardbytes.alightinthevoid.interfaces.ITickable;
 
+/**
+ * Player wrapper class. Contains constants, input processing, rendering, ...
+ */
 public class Player implements ITickable, ILockable{
 	
 	private Sprite playerSprite;
@@ -19,11 +21,18 @@ public class Player implements ITickable, ILockable{
 	private float movementSpeed = 3.0f;
 	private float rotationSpeed = 2.5f;
 	
+	/**
+	 * Enum defining what team the player is in.
+	 */
 	public enum Team{
 		AQUAMARINE,
 		AMBER
 	}
 	
+	/**
+	 * Constructs player with a texture of given team.
+	 * @param team Team to use
+	 */
 	public Player(Team team){
 		if(team == Team.AMBER){
 			playerSprite = new Sprite(new Texture(Gdx.files.internal("players/amberplayer.png")));
@@ -34,7 +43,6 @@ public class Player implements ITickable, ILockable{
 		}
 		
 		position = new Vector2();
-		GameScreen.tickableGameObjects.add(this);
 	
 	}
 	
