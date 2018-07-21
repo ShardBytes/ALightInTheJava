@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import io.github.shardbytes.alightinthevoid.interfaces.ILockable;
 import io.github.shardbytes.alightinthevoid.interfaces.ITickable;
+import io.github.shardbytes.alightinthevoid.physics.ValueAnimator;
 
 /**
  * Player wrapper class. Contains constants, input processing, rendering, ...
@@ -17,9 +18,11 @@ public class Player implements ITickable, ILockable{
 	
 	private Sprite playerSprite;
 	private Vector2 position;
+	private ValueAnimator speedAnimator;
 	
-	private float movementSpeed = 3.0f;
+	private float maxMovementSpeed = 3.0f;
 	private float rotationSpeed = 2.5f;
+	private Double speed = 0.0d;
 	
 	/**
 	 * Enum defining what team the player is in.
@@ -43,7 +46,9 @@ public class Player implements ITickable, ILockable{
 		}
 		
 		position = new Vector2();
-	
+		speedAnimator = new ValueAnimator(speed, 6.0d, this::setSpeed, false);
+		speedAnimator.setActive(true);
+		
 	}
 	
 	@Override
@@ -53,23 +58,24 @@ public class Player implements ITickable, ILockable{
 	
 	@Override
 	public void tick(SpriteBatch batch, float delta){
+		speedAnimator.tick(batch, delta);
 		handleInput();
 		addToBatch(batch);
 	}
 	
 	private void handleInput(){
 		float rotation = playerSprite.getRotation();
-		float xAmount = -movementSpeed * MathUtils.sinDeg(rotation);
-		float yAmount = movementSpeed * MathUtils.cosDeg(rotation);
+		float xAmount = (float)(-speed * MathUtils.sinDeg(rotation));
+		float yAmount = (float)(speed * MathUtils.cosDeg(rotation));
 		
 		if(Gdx.input.isKeyPressed(Input.Keys.UP)){
-			position.add(xAmount, yAmount);
-			playerSprite.translate(xAmount, yAmount);
+			speedAnimator.setTargetValue(maxMovementSpeed);
+		}else if(Gdx.input.isKeyPressed(Input.Keys.DOWN)){
+			speedAnimator.setTargetValue(-maxMovementSpeed / 2.0d);
+		}else{
+			speedAnimator.setTargetValue(0.0d);
 		}
-		if(Gdx.input.isKeyPressed(Input.Keys.DOWN)){
-			position.sub(xAmount, yAmount);
-			playerSprite.translate(-xAmount, -yAmount);
-		}
+		
 		if(Gdx.input.isKeyPressed(Input.Keys.LEFT)){
 			playerSprite.rotate(rotationSpeed);
 		}
@@ -77,10 +83,17 @@ public class Player implements ITickable, ILockable{
 			playerSprite.rotate(-rotationSpeed);
 		}
 		
+		position.add(xAmount, yAmount);
+		playerSprite.translate(xAmount, yAmount);
+		
 	}
 	
 	private void addToBatch(SpriteBatch batch){
 		playerSprite.draw(batch);
+	}
+	
+	private void setSpeed(double speed){
+		this.speed = speed;
 	}
 	
 }

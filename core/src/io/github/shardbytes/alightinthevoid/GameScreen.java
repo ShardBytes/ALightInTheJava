@@ -46,11 +46,14 @@ public class GameScreen implements Screen{
 		player = new Player(Player.Team.AMBER);
 		tickableObjects.add(player);
 		
-		FPSCounter counter = new FPSCounter();
-		tickableHUDs.add(counter);
+		/*
+		 * TODO: Add in-game FPS counter
+		 */
+		//FPSCounter counter = new FPSCounter();
+		//tickableHUDs.add(counter);
 		
 		cam = new Camera(Camera.ResizeStrategy.KEEP_ZOOM, player);
-		hudCam = new Camera(Camera.ResizeStrategy.KEEP_ZOOM);
+		hudCam = new Camera(Camera.ResizeStrategy.CHANGE_ZOOM);
 
 	}
 
@@ -62,6 +65,8 @@ public class GameScreen implements Screen{
 
 		Gdx.gl.glClearColor(0.0f, 0.0f, 0.2f, 1.0f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		
+		Gdx.graphics.setTitle("A Light in The Void: " + Gdx.graphics.getFramesPerSecond() + " FPS");
 		
 		game.batch.begin();
 		mapSprite.draw(game.batch);
