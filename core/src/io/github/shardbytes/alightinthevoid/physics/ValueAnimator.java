@@ -1,8 +1,5 @@
 package io.github.shardbytes.alightinthevoid.physics;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import io.github.shardbytes.alightinthevoid.interfaces.ITickable;
-
 import java.util.function.Consumer;
 
 /**
@@ -13,7 +10,7 @@ import java.util.function.Consumer;
  * Basically so the value doesn't jump from 0 to 10, but smoothly moves from 0 to 1, then to 2... and so on.
  * Depends on ticking the ValueAnimator object as a trigger.
  */
-public class ValueAnimator implements ITickable{
+public class ValueAnimator{
 	
 	private Double variable;
 	private Double changeRate;
@@ -26,7 +23,7 @@ public class ValueAnimator implements ITickable{
 	 * Constructs a new ValueAnimator object
 	 * @param value Value that should be animated
 	 * @param changeRate Rate at which the value should be changed
-	 * @param setter Setter that is used to set the value in first parameter
+	 * @param setter Setter that is used to set the value in the first parameter
 	 * @param stopOnValueReached Should this object be disabled when the value is reached or should it listen to more changes?
 	 */
 	public ValueAnimator(Double value, Double changeRate, Consumer<Double> setter, boolean stopOnValueReached){
@@ -54,8 +51,11 @@ public class ValueAnimator implements ITickable{
 		this.active = active;
 	}
 	
-	@Override
-	public void tick(SpriteBatch batch, float delta){
+	/**
+	 * Step the value animator by one step. This should be called every frame after rendering is complete.
+	 * @param delta Delta time
+	 */
+	public void step(float delta){
 		if(active){
 			double d = changeRate * delta;
 			

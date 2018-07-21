@@ -58,7 +58,7 @@ public class Player implements ITickable, ILockable{
 	
 	@Override
 	public void tick(SpriteBatch batch, float delta){
-		speedAnimator.tick(batch, delta);
+		speedAnimator.step(delta);
 		handleInput();
 		addToBatch(batch);
 	}
