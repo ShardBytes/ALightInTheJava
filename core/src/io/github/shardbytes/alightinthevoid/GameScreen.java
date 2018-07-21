@@ -6,9 +6,12 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.math.Vector2;
 import io.github.shardbytes.alightinthevoid.entities.Camera;
 import io.github.shardbytes.alightinthevoid.entities.Player;
 import io.github.shardbytes.alightinthevoid.interfaces.ITickable;
+import io.github.shardbytes.alightinthevoid.internal.ParallaxBackground;
 import io.github.shardbytes.alightinthevoid.overlay.FPSCounter;
 
 import java.util.ArrayList;
@@ -20,6 +23,10 @@ public class GameScreen implements Screen{
 	private Sprite mapSprite;
 	private Music music;
 	private Player player;
+	private ParallaxBackground background;
+	
+	private int windowWidth = Gdx.graphics.getWidth();
+	private int windowHeight = Gdx.graphics.getHeight();
 	
 	private final VoidLight game;
 	
@@ -40,8 +47,16 @@ public class GameScreen implements Screen{
 		music.setLooping(true);
 
 		mapSprite = new Sprite(new Texture(Gdx.files.internal("starBgPmxyEdition.png")));
-		mapSprite.setPosition(0, 0);
-		mapSprite.setSize(128, 128);
+		//mapSprite.setPosition(0, 0);
+		//mapSprite.setSize(128, 128);
+		
+		Texture[] backgroundTextures = new Texture[2];
+		backgroundTextures[0] = mapSprite.getTexture();
+		backgroundTextures[1] = mapSprite.getTexture();
+		
+		background = new ParallaxBackground(backgroundTextures);
+		background.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		background.setSpeed(1);
 		
 		player = new Player(Player.Team.AMBER);
 		tickableObjects.add(player);
@@ -66,10 +81,10 @@ public class GameScreen implements Screen{
 		Gdx.gl.glClearColor(0.0f, 0.0f, 0.2f, 1.0f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
-		Gdx.graphics.setTitle("A Light in The Void: " + Gdx.graphics.getFramesPerSecond() + " FPS");
-		
 		game.batch.begin();
-		mapSprite.draw(game.batch);
+		
+		background.draw(game.batch, 1.0f);
+		
 		for(ITickable tickableEntity : tickableObjects){
 			tickableEntity.tick(game.batch, delta);
 		}
@@ -95,6 +110,9 @@ public class GameScreen implements Screen{
 	public void resize(int width, int height){
 		cam.windowResized(width, height);
 		hudCam.windowResized(width, height);
+		
+		windowHeight = Gdx.graphics.getHeight();
+		windowWidth = Gdx.graphics.getWidth();
 	}
 	
 	@Override

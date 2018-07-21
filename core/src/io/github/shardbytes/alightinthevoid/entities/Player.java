@@ -20,7 +20,7 @@ public class Player implements ITickable, ILockable{
 	private Vector2 position;
 	private ValueAnimator speedAnimator;
 	
-	private float maxMovementSpeed = 3.0f;
+	private float maxSpeed = 3.0f;
 	private float rotationSpeed = 2.5f;
 	private Double speed = 0.0d;
 	
@@ -69,9 +69,9 @@ public class Player implements ITickable, ILockable{
 		float yAmount = (float)(speed * MathUtils.cosDeg(rotation));
 		
 		if(Gdx.input.isKeyPressed(Input.Keys.UP)){
-			speedAnimator.setTargetValue(maxMovementSpeed);
+			speedAnimator.setTargetValue(maxSpeed);
 		}else if(Gdx.input.isKeyPressed(Input.Keys.DOWN)){
-			speedAnimator.setTargetValue(-maxMovementSpeed / 2.0d);
+			speedAnimator.setTargetValue(-maxSpeed / 2.0d);
 		}else{
 			speedAnimator.setTargetValue(0.0d);
 		}

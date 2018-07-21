@@ -7,10 +7,10 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 
 public class MainMenu implements Screen{
 
-	final VoidLight game;
-	OrthographicCamera cam;
+	private final VoidLight game;
+	private OrthographicCamera cam;
 	
-	public MainMenu(final VoidLight game){
+	MainMenu(final VoidLight game){
 		this.game = game;
 
 		float w = Gdx.graphics.getWidth();
@@ -32,7 +32,7 @@ public class MainMenu implements Screen{
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		game.batch.begin();
-		game.font.draw(game.batch, "HENLO BOI", 15.0f, 15.0f);
+		game.font.draw(game.batch, "HENLO BOI\nCLICC TO KONTINUE", 15.0f, 15.0f);
 		game.batch.end();
 		
 		if(Gdx.input.isTouched()){
