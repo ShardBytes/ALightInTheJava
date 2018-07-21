@@ -1,6 +1,4 @@
-package io.github.shardbytes.alightinthevoid.physics;
-
-import java.util.function.Consumer;
+package io.github.shardbytes.alightinthevoid.internal;
 
 /**
  * Inspired by @Plasmoxy's Tween class in JS
@@ -15,7 +13,7 @@ public class ValueAnimator{
 	private Double variable;
 	private Double changeRate;
 	private Double target;
-	private Consumer<Double> setter;
+	private DoubleSetter setter;
 	private boolean stopOnReached;
 	private boolean active;
 	
@@ -26,7 +24,7 @@ public class ValueAnimator{
 	 * @param setter Setter that is used to set the value in the first parameter
 	 * @param stopOnValueReached Should this object be disabled when the value is reached or should it listen to more changes?
 	 */
-	public ValueAnimator(Double value, Double changeRate, Consumer<Double> setter, boolean stopOnValueReached){
+	public ValueAnimator(Double value, Double changeRate, DoubleSetter setter, boolean stopOnValueReached){
 		this.variable = value;
 		this.setter = setter;
 		this.changeRate = changeRate;
@@ -74,7 +72,7 @@ public class ValueAnimator{
 				variable -= d;
 			}
 			
-			setter.accept(variable);
+			setter.set(variable);
 			
 		}
 		

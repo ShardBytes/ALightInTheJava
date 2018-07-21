@@ -9,7 +9,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import io.github.shardbytes.alightinthevoid.interfaces.ILockable;
 import io.github.shardbytes.alightinthevoid.interfaces.ITickable;
-import io.github.shardbytes.alightinthevoid.physics.ValueAnimator;
+import io.github.shardbytes.alightinthevoid.internal.ValueAnimator;
 
 /**
  * Player wrapper class. Contains constants, input processing, rendering, ...
