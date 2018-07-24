@@ -31,7 +31,7 @@ public abstract class Bullet implements ITickable, ILockable{
 	}
 	
 	protected void addToBatch(SpriteBatch batch){
-		bulletSprite.draw(batch);
+		batch.draw(bulletSprite.getTexture(), position.x, position.y, 0, 0, bulletSprite.getTexture().getWidth(), bulletSprite.getTexture().getHeight(), 1, 1, rotation, 0, 0, bulletSprite.getTexture().getWidth(), bulletSprite.getTexture().getHeight(), false, false);
 	}
 	
 }

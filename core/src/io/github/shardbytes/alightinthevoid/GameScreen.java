@@ -85,9 +85,10 @@ public class GameScreen implements Screen{
 		
 		background.draw(game.batch, 1.0f);
 		
-		for(ITickable tickableEntity : tickableObjects){
-			tickableEntity.tick(game.batch, delta);
+		for(int i = 0; i < tickableObjects.size(); i++){
+			tickableObjects.get(i).tick(game.batch, delta);
 		}
+		
 		game.batch.end();
 		
 		game.HUDBatch.begin();

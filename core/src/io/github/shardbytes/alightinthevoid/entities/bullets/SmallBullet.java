@@ -15,6 +15,7 @@ public class SmallBullet extends Bullet{
 		this.rotation = rotation;
 		this.fake = fake;
 		
+		setProperties();
 		this.bulletSprite = new Sprite(new Texture(Gdx.files.internal("bullets/bluelaser.png")));
 	}
 	
@@ -22,6 +23,7 @@ public class SmallBullet extends Bullet{
 	public void tick(SpriteBatch batch, float delta){
 		if(currentLifeTime > maxLifeTime){
 			GameScreen.tickableObjects.remove(this);
+			
 		}else{
 			incrementLifeTime(delta);
 		}
@@ -44,7 +46,7 @@ public class SmallBullet extends Bullet{
 	}
 	
 	private void incrementLifeTime(float delta){
-		currentLifeTime += 1 / 60 * delta;
+		currentLifeTime += 1 * delta;
 	}
 	
 }
