@@ -9,20 +9,19 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import io.github.shardbytes.alightinthevoid.interfaces.ILockable;
 import io.github.shardbytes.alightinthevoid.interfaces.ITickable;
-import io.github.shardbytes.alightinthevoid.internal.ValueAnimator;
+import io.github.shardbytes.alightinthevoid.internal.Tween;
 
 /**
  * Player wrapper class. Contains constants, input processing, rendering, ...
  */
 public class Player implements ITickable, ILockable{
 	
+	public static final float MAX_SPEED = 3.0f;
+	public static final float ROTATION_SPEED = 2.5f;
+	
 	private Sprite playerSprite;
 	private Vector2 position;
-	private ValueAnimator speedAnimator;
-	
-	private float maxSpeed = 3.0f;
-	private float rotationSpeed = 2.5f;
-	private Double speed = 0.0d;
+	private Tween interpolatedSpeed;
 	
 	/**
 	 * Enum defining what team the player is in.
@@ -46,8 +45,7 @@ public class Player implements ITickable, ILockable{
 		}
 		
 		position = new Vector2();
-		speedAnimator = new ValueAnimator(speed, 6.0d, this::setSpeed, false);
-		speedAnimator.setActive(true);
+		interpolatedSpeed = new Tween(0.0d, 6.0d, true, false);
 		
 	}
 	
@@ -58,29 +56,29 @@ public class Player implements ITickable, ILockable{
 	
 	@Override
 	public void tick(SpriteBatch batch, float delta){
-		speedAnimator.step(delta);
+		interpolatedSpeed.step(delta);
 		handleInput();
 		addToBatch(batch);
 	}
 	
 	private void handleInput(){
 		float rotation = playerSprite.getRotation();
-		float xAmount = (float)(-speed * MathUtils.sinDeg(rotation));
-		float yAmount = (float)(speed * MathUtils.cosDeg(rotation));
+		float xAmount = -interpolatedSpeed.getFloat() * MathUtils.sinDeg(rotation);
+		float yAmount = interpolatedSpeed.getFloat() * MathUtils.cosDeg(rotation);
 		
 		if(Gdx.input.isKeyPressed(Input.Keys.UP)){
-			speedAnimator.setTargetValue(maxSpeed);
+			interpolatedSpeed.setTarget(MAX_SPEED);
 		}else if(Gdx.input.isKeyPressed(Input.Keys.DOWN)){
-			speedAnimator.setTargetValue(-maxSpeed / 2.0d);
+			interpolatedSpeed.setTarget(-MAX_SPEED / 2.0d);
 		}else{
-			speedAnimator.setTargetValue(0.0d);
+			interpolatedSpeed.setTarget(0.0d);
 		}
 		
 		if(Gdx.input.isKeyPressed(Input.Keys.LEFT)){
-			playerSprite.rotate(rotationSpeed);
+			playerSprite.rotate(ROTATION_SPEED);
 		}
 		if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
-			playerSprite.rotate(-rotationSpeed);
+			playerSprite.rotate(-ROTATION_SPEED);
 		}
 		
 		position.add(xAmount, yAmount);
@@ -90,10 +88,6 @@ public class Player implements ITickable, ILockable{
 	
 	private void addToBatch(SpriteBatch batch){
 		playerSprite.draw(batch);
-	}
-	
-	private void setSpeed(double speed){
-		this.speed = speed;
 	}
 	
 }

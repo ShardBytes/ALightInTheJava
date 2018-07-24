@@ -1,16 +1,19 @@
 package io.github.shardbytes.alightinthevoid.internal;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import io.github.shardbytes.alightinthevoid.GameScreen;
 
 public class ParallaxBackground extends Actor{
 	
-	private int scroll;
+	private float scrollX;
+	private float scrollY;
 	private int speed;
 	private Texture[] layers;
-	private final int SPEED_DIFFERENCE = 2;
+	private final float SPEED_DIFFERENCE = 0.05f;
 	
 	float x;
 	float y;
@@ -52,11 +55,14 @@ public class ParallaxBackground extends Actor{
 	public void draw(Batch batch, float parentAlpha){
 		batch.setColor(getColor().r, getColor().g, getColor().b, getColor().a * parentAlpha);
 		
-		scroll += speed;
+		scrollX = GameScreen.player.getPosition().x / 20.0f;
+		scrollY = GameScreen.player.getPosition().y / 20.0f;
 		
 		for(int i = 0; i < layers.length; i++){
-			sourceX = scroll + i * SPEED_DIFFERENCE * scroll;
-			batch.draw(layers[i], x, y, originX, originY, width, height, scaleX, scaleY, rotation, sourceX, sourceY, layers[i].getWidth(), layers[i].getHeight(), flipX, flipY);
+			sourceX = Math.round(scrollX + i * SPEED_DIFFERENCE * scrollX);
+			sourceY = Math.round(scrollY + i * SPEED_DIFFERENCE * scrollY);
+			//batch.draw(layers[i], x, y, originX, originY, width, height, scaleX, scaleY, rotation, sourceX, sourceY, layers[i].getWidth(), layers[i].getHeight(), flipX, flipY);
+			batch.draw(layers[i], x, y, layers[i].getWidth(), layers[i].getHeight(), sourceX, sourceY, layers[i].getWidth(), layers[i].getHeight(), flipX, flipY);
 		}
 		
 	}

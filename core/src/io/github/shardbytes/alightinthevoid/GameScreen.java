@@ -22,7 +22,7 @@ public class GameScreen implements Screen{
 	private Camera hudCam;
 	private Sprite mapSprite;
 	private Music music;
-	private Player player;
+	public static Player player;
 	private ParallaxBackground background;
 	
 	private int windowWidth = Gdx.graphics.getWidth();
