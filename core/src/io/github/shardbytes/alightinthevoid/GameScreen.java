@@ -33,12 +33,12 @@ public class GameScreen implements Screen{
 	/**
 	 * ArrayList that holds all game objects that are tickable.
 	 */
-	private static ArrayList<ITickable> tickableObjects = new ArrayList<>();
+	public static ArrayList<ITickable> tickableObjects = new ArrayList<>();
 	
 	/**
 	 * ArrayList that holds all game HUD's that are tickable.
 	 */
-	private static ArrayList<ITickable> tickableHUDs = new ArrayList<>();
+	public static ArrayList<ITickable> tickableHUDs = new ArrayList<>();
 
 	GameScreen(final VoidLight game){
 		this.game = game;

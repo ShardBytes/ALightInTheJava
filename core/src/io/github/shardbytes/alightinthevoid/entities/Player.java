@@ -7,6 +7,9 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import io.github.shardbytes.alightinthevoid.GameScreen;
+import io.github.shardbytes.alightinthevoid.entities.bullets.Bullet;
+import io.github.shardbytes.alightinthevoid.entities.bullets.SmallBullet;
 import io.github.shardbytes.alightinthevoid.interfaces.ILockable;
 import io.github.shardbytes.alightinthevoid.interfaces.ITickable;
 import io.github.shardbytes.alightinthevoid.internal.Tween;
@@ -16,8 +19,8 @@ import io.github.shardbytes.alightinthevoid.internal.Tween;
  */
 public class Player implements ITickable, ILockable{
 	
-	public static final float MAX_SPEED = 3.0f;
-	public static final float ROTATION_SPEED = 2.5f;
+	private float maxSpeed = 3.0f;
+	private float rotationSpeed = 2.5f;
 	
 	private Sprite playerSprite;
 	private Vector2 position;
@@ -62,32 +65,47 @@ public class Player implements ITickable, ILockable{
 	}
 	
 	private void handleInput(){
+		/*
+		 * Movement
+		 */
 		float rotation = playerSprite.getRotation();
 		float xAmount = -interpolatedSpeed.getFloat() * MathUtils.sinDeg(rotation);
 		float yAmount = interpolatedSpeed.getFloat() * MathUtils.cosDeg(rotation);
 		
 		if(Gdx.input.isKeyPressed(Input.Keys.UP)){
-			interpolatedSpeed.setTarget(MAX_SPEED);
+			interpolatedSpeed.setTarget(maxSpeed);
 		}else if(Gdx.input.isKeyPressed(Input.Keys.DOWN)){
-			interpolatedSpeed.setTarget(-MAX_SPEED / 2.0d);
+			interpolatedSpeed.setTarget(-maxSpeed / 2.0d);
 		}else{
 			interpolatedSpeed.setTarget(0.0d);
 		}
 		
 		if(Gdx.input.isKeyPressed(Input.Keys.LEFT)){
-			playerSprite.rotate(ROTATION_SPEED);
+			playerSprite.rotate(rotationSpeed);
 		}
 		if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
-			playerSprite.rotate(-ROTATION_SPEED);
+			playerSprite.rotate(-rotationSpeed);
 		}
 		
 		position.add(xAmount, yAmount);
 		playerSprite.translate(xAmount, yAmount);
 		
+		/*
+		 * Shooting
+		 */
+		if(Gdx.input.isKeyPressed(Input.Keys.Q)){
+			shoot();
+		}
+		
 	}
 	
 	private void addToBatch(SpriteBatch batch){
 		playerSprite.draw(batch);
+	}
+	
+	private void shoot(){
+		Bullet b = new SmallBullet(this.position, this.playerSprite.getRotation(), false);
+		GameScreen.tickableObjects.add(b);
 	}
 	
 }
