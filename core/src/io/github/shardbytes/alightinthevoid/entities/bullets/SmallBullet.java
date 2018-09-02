@@ -33,7 +33,7 @@ public class SmallBullet extends Bullet{
 	}
 	
 	private void setProperties(){
-		speed = 16.6f;
+		speed = 0.05f;
 		damage = 5.0f;
 		maxLifeTime = 1.5f;
 	}
