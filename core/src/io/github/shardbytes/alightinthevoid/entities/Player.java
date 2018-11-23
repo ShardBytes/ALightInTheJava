@@ -14,6 +14,8 @@ import io.github.shardbytes.alightinthevoid.interfaces.ILockable;
 import io.github.shardbytes.alightinthevoid.interfaces.ITickable;
 import io.github.shardbytes.alightinthevoid.internal.Tween;
 
+import java.security.*;
+
 /**
  * Player wrapper class. Contains constants, input processing, rendering, ...
  */
@@ -40,13 +42,14 @@ public class Player implements ITickable, ILockable{
 	 */
 	public Player(Team team){
 		if(team == Team.AMBER){
-			playerSprite = new Sprite(new Texture(Gdx.files.internal("players/amberplayer.png")));
+			playerSprite = new Sprite(new Texture(Gdx.files.internal("core/assets/players/amberplayer.png")));
 		}else if(team == Team.AQUAMARINE){
-			playerSprite = new Sprite(new Texture(Gdx.files.internal("players/aquamarineplayer.png")));
+			playerSprite = new Sprite(new Texture(Gdx.files.internal("core/assets/players/aquamarineplayer.png")));
 		}else{
-			System.err.println("Player " + this.toString() + "has no team specified!");
+			throw new InvalidParameterException("Player " + this.toString() + " has no team specified!");
 		}
-		
+
+		playerSprite.scale(10.0f);
 		position = new Vector2();
 		interpolatedSpeed = new Tween(0.0d, 6.0d, true, false);
 		
@@ -107,5 +110,10 @@ public class Player implements ITickable, ILockable{
 		Bullet b = new SmallBullet(this.position, this.playerSprite.getRotation(), false);
 		GameScreen.tickableObjects.add(b);
 	}
-	
+
+	@Override
+	public String toString(){
+		return "playerName"; //TODO: nicknames
+	}
+
 }

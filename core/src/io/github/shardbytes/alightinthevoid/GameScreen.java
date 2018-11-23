@@ -6,8 +6,7 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.math.Interpolation;
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.*;
 import io.github.shardbytes.alightinthevoid.entities.Camera;
 import io.github.shardbytes.alightinthevoid.entities.Player;
 import io.github.shardbytes.alightinthevoid.interfaces.ITickable;
@@ -25,9 +24,6 @@ public class GameScreen implements Screen{
 	public static Player player;
 	private ParallaxBackground background;
 	
-	private int windowWidth = Gdx.graphics.getWidth();
-	private int windowHeight = Gdx.graphics.getHeight();
-	
 	private final VoidLight game;
 	
 	/**
@@ -42,17 +38,20 @@ public class GameScreen implements Screen{
 
 	GameScreen(final VoidLight game){
 		this.game = game;
+
+		cam = new Camera(Camera.ResizeStrategy.KEEP_ZOOM, 150.0f, 150.0f);
+		hudCam = new Camera(Camera.ResizeStrategy.CHANGE_ZOOM, 100.0f, 100.0f);
 		
-		music = Gdx.audio.newMusic(Gdx.files.internal("music.mp3"));
+		music = Gdx.audio.newMusic(Gdx.files.internal("core/assets/music.mp3"));
 		music.setLooping(true);
 
-		mapSprite = new Sprite(new Texture(Gdx.files.internal("starBgPmxyEdition.png")));
+		mapSprite = new Sprite(new Texture(Gdx.files.internal("core/assets/starBgPmxyEdition.png")));
 		//mapSprite.setPosition(0, 0);
 		//mapSprite.setSize(128, 128);
 		
-		Texture[] backgroundTextures = new Texture[2];
+		Texture[] backgroundTextures = new Texture[1];
 		backgroundTextures[0] = mapSprite.getTexture();
-		backgroundTextures[1] = mapSprite.getTexture();
+		//backgroundTextures[1] = mapSprite.getTexture();
 		
 		background = new ParallaxBackground(backgroundTextures);
 		background.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -60,42 +59,41 @@ public class GameScreen implements Screen{
 		
 		player = new Player(Player.Team.AMBER);
 		tickableObjects.add(player);
-		
-		/*
-		 * TODO: Add in-game FPS counter
-		 */
-		//FPSCounter counter = new FPSCounter();
-		//tickableHUDs.add(counter);
-		
-		cam = new Camera(Camera.ResizeStrategy.KEEP_ZOOM, player);
-		hudCam = new Camera(Camera.ResizeStrategy.CHANGE_ZOOM);
+		cam.lockOn(player);
+
+		FPSCounter counter = new FPSCounter(new Vector2(-50.0f, 50.0f));
+		tickableHUDs.add(counter);
 
 	}
 
 	@Override
 	public void render(float delta){
 		cam.update();
+		hudCam.update();
+
 		game.batch.setProjectionMatrix(cam.getInnerCamera().combined);
-		game.HUDBatch.setProjectionMatrix(hudCam.getInnerCamera().combined);
+		game.hudBatch.setProjectionMatrix(hudCam.getInnerCamera().combined);
 
 		Gdx.gl.glClearColor(0.0f, 0.0f, 0.2f, 1.0f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		
+
 		game.batch.begin();
-		
 		background.draw(game.batch, 1.0f);
-		
 		for(int i = 0; i < tickableObjects.size(); i++){
 			tickableObjects.get(i).tick(game.batch, delta);
 		}
-		
 		game.batch.end();
-		
-		game.HUDBatch.begin();
-		for(ITickable hud : tickableHUDs){
-			hud.tick(game.HUDBatch, delta);
+
+		game.hudBatch.begin();
+		for(int i = 0; i < tickableHUDs.size(); i++){
+			tickableHUDs.get(i).tick(game.hudBatch, delta);
 		}
-		game.HUDBatch.end();
+		game.hudBatch.end();
+
+		Vector2 viewportCam = new Vector2(cam.getInnerCamera().viewportWidth, cam.getInnerCamera().viewportHeight);
+		Vector2 viewportHud = new Vector2(hudCam.getInnerCamera().viewportWidth, hudCam.getInnerCamera().viewportHeight);
+		System.out.println("viewportCam = " + viewportCam);
+		System.out.println("viewportHud = " + viewportHud);
 
 	}
 	
@@ -111,9 +109,7 @@ public class GameScreen implements Screen{
 	public void resize(int width, int height){
 		cam.windowResized(width, height);
 		hudCam.windowResized(width, height);
-		
-		windowHeight = Gdx.graphics.getHeight();
-		windowWidth = Gdx.graphics.getWidth();
+
 	}
 	
 	@Override

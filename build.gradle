@@ -50,7 +50,7 @@ project(":desktop") {
         
     }
 }
-
+/*
 project(":ios") {
     apply plugin: "java"
     apply plugin: "robovm"
@@ -66,7 +66,7 @@ project(":ios") {
         
     }
 }
-
+*/
 project(":core") {
     apply plugin: "java"
 
@@ -79,7 +79,7 @@ project(":core") {
         
     }
 }
-
+/*
 project(":android") {
     apply plugin: "android"
 
@@ -104,7 +104,7 @@ project(":android") {
         
     }
 }
-
+*/
 tasks.eclipse.doLast {
     delete ".project"
 }

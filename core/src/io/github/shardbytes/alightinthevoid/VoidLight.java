@@ -7,13 +7,13 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 public class VoidLight extends Game{
 	
 	public SpriteBatch batch;
-	public SpriteBatch HUDBatch;
+	public SpriteBatch hudBatch;
 	public BitmapFont font;
 	
 	@Override
 	public void create(){
 		batch = new SpriteBatch();
-		HUDBatch = new SpriteBatch();
+		hudBatch = new SpriteBatch();
 		font = new BitmapFont();
 		
 		this.setScreen(new MainMenu(this));
@@ -29,7 +29,7 @@ public class VoidLight extends Game{
 	public void dispose(){
 		//super.dispose();
 		batch.dispose();
-		HUDBatch.dispose();
+		hudBatch.dispose();
 		font.dispose();
 		
 	}

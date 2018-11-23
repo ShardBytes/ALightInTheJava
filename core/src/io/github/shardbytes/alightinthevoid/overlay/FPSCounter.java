@@ -14,16 +14,15 @@ import io.github.shardbytes.alightinthevoid.interfaces.ITickable;
 public class FPSCounter implements ITickable{
 	
 	private Vector2 counterPosition;
-	private Sprite backgroundSprite;
+	private Texture backgroundTexture;
 	private BitmapFont text;
 	
 	/**
 	 * Constructs FPS counter in an upper left corner of a screen.
 	 */
 	public FPSCounter(){
-		counterPosition = new Vector2(-30.0f, 30.0f);
-		backgroundSprite = new Sprite(new Texture(Gdx.files.internal("hud/fpsbackground.png")));
-		backgroundSprite.setPosition(counterPosition.x, counterPosition.y);
+		counterPosition = new Vector2(0.0f, 0.0f);
+		backgroundTexture = new Texture(Gdx.files.internal("core/assets/hud/fpsbackground.png"));
 		text = new BitmapFont();
 	}
 	
@@ -33,14 +32,13 @@ public class FPSCounter implements ITickable{
 	 */
 	public FPSCounter(Vector2 position){
 		counterPosition = position;
-		backgroundSprite = new Sprite(new Texture(Gdx.files.internal("hud/fpsbackground.png")));
-		backgroundSprite.setPosition(counterPosition.x, counterPosition.y);
+		backgroundTexture = new Texture(Gdx.files.internal("core/assets/hud/fpsbackground.png"));
 		text = new BitmapFont();
 	}
 	
 	@Override
 	public void tick(SpriteBatch batch, float delta){
-		backgroundSprite.draw(batch);
+		batch.draw(backgroundTexture, counterPosition.x, counterPosition.y);
 		text.draw(batch, String.valueOf(Gdx.graphics.getFramesPerSecond()), counterPosition.x, counterPosition.y);
 	
 	}

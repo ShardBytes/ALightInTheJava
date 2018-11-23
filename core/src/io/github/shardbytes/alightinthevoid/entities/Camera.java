@@ -3,6 +3,7 @@ package io.github.shardbytes.alightinthevoid.entities;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.viewport.*;
 import io.github.shardbytes.alightinthevoid.interfaces.ILockable;
 
 /**
@@ -13,10 +14,13 @@ public class Camera implements ILockable{
 	private OrthographicCamera camera;
 	private Vector2 cameraPosition;
 	private ResizeStrategy resizeStrategy;
-	private ILockable lockObject = this;
+	private ILockable lockObject = null;
+	private Viewport viewport;
 	
-	private float width = Gdx.graphics.getWidth();
-	private float height = Gdx.graphics.getHeight();
+	private float screenWidth = Gdx.graphics.getWidth();
+	private float screenHeight = Gdx.graphics.getHeight();
+	private float viewportWidth;
+	private float viewportHeight;
 	
 	/**
 	 * Enum defining what should camera do on window resize.
@@ -24,46 +28,68 @@ public class Camera implements ILockable{
 	public enum ResizeStrategy{
 		KEEP_ZOOM,
 		CHANGE_ZOOM
+
 	}
-	
+
 	/**
-	 * Constructs a camera on [0, 0] position.
+	 * Constructs a camera on [0, 0] world position.
 	 * @param strategy What should camera do when window is resized
+	 * @param width Width of camera's viewport
+	 * @param height Height of camera's viewport
 	 */
-	public Camera(ResizeStrategy strategy){
+	public Camera(ResizeStrategy strategy, float width, float height){
 		resizeStrategy = strategy;
 		cameraPosition = new Vector2();
+		viewportWidth = width;
+		viewportHeight = height;
 		construct();
+
 	}
 	
 	/**
-	 * Constructs a camera on a given position.
+	 * Constructs a camera on a given world position.
 	 * @param strategy What should camera do when window is resized
 	 * @param position Camera's position
+	 * @param width Width of camera's viewport
+	 * @param height Height of camera's viewport
 	 */
-	public Camera(ResizeStrategy strategy, Vector2 position){
+	public Camera(ResizeStrategy strategy, Vector2 position, float width, float height){
 		resizeStrategy = strategy;
 		cameraPosition = position;
+		viewportWidth = width;
+		viewportHeight = height;
 		construct();
+
 	}
 	
 	/**
 	 * Constructs a camera that follows the given object.
 	 * @param strategy What should camera do when window is resized
 	 * @param object Object to lock the camera on
+	 * @param width Width of camera's viewport
+	 * @param height Height of camera's viewport
 	 */
-	public Camera(ResizeStrategy strategy, ILockable object){
+	public Camera(ResizeStrategy strategy, ILockable object, float width, float height){
 		resizeStrategy = strategy;
 		cameraPosition = object.getPosition();
 		lockObject = object;
+		viewportWidth = width;
+		viewportHeight = height;
 		construct();
+
 	}
 	
 	private void construct(){
-		camera = new OrthographicCamera(30, 30 * (height / width));
-		camera.position.set(camera.viewportWidth / 2.0f, camera.viewportHeight / 2.0f, 0.0f);
-		camera.zoom = 10.0f;
+		if(resizeStrategy == ResizeStrategy.CHANGE_ZOOM){
+			camera = new OrthographicCamera(viewportWidth, viewportHeight);
+			viewport = new FitViewport(viewportWidth, viewportHeight, camera);
+		}else{
+			camera = new OrthographicCamera();
+			viewport = new ScreenViewport(camera);
+		}
+
 		camera.update();
+
 	}
 	
 	/**
@@ -79,24 +105,21 @@ public class Camera implements ILockable{
 	 * @param pos Camera position
 	 */
 	public void setPosition(Vector2 pos){
-		lockObject = this;
+		lockObject = null;
 		cameraPosition = pos;
+
 	}
 	
 	/**
 	 * Method that must be called whenever the window has resized to change camera's zoom
 	 * or viewport size accordingly.
-	 * @param width New window width
-	 * @param height New window height
+	 * @param width New window screenWidth
+	 * @param height New window screenHeight
 	 */
 	public void windowResized(int width, int height){
-		if(resizeStrategy == ResizeStrategy.KEEP_ZOOM){
-			keepZoom(width, height);
-		}else{
-			changeZoom(width, height);
-		}
+		viewport.update(width, height);
 		update();
-		
+
 	}
 	
 	/**
@@ -118,24 +141,14 @@ public class Camera implements ILockable{
 	 * @see OrthographicCamera#update()
 	 */
 	public void update(){
-		if(lockObject.equals(this)){
+		if(lockObject == null){
 			camera.position.set(cameraPosition, 0.0f);
-			camera.update();
 		}else{
 			camera.position.set(lockObject.getPosition(), 0.0f);
-			camera.update();
 		}
+
+		camera.update();
 		
-	}
-	
-	private void changeZoom(int w, int h){
-		camera.viewportWidth = 30.0f;
-		camera.viewportHeight = 30.0f * h / w;
-	}
-	
-	private void keepZoom(int w, int h){
-		camera.viewportWidth = w / 30.0f;
-		camera.viewportHeight = camera.viewportWidth * h / w;
 	}
 	
 }
